@@ -163,3 +163,11 @@ cython_debug/
 
 # API Keys
 api_keys.py
+
+# LaTeX Files
+*.tex
+*.synctex.gz
+
+# Image Fils
+*.png
+*.jpg
