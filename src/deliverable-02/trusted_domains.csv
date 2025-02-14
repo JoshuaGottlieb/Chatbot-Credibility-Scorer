@@ -1,0 +1,25 @@
+url,name,star_rating,knowledge_domain
+www.fool.com,"The Motley Fool",4.0,Finance
+www.economist.com,"The Economist",4.5,Finance
+www.marketwatch.com,"MarketWatch",5.0,Finance
+www.ft.com,"Financial Times",4.5,Finance
+www.cnn.com,"CNN",4.0,Finance
+www.cnbc.com,"CNBC",4.5,Finance
+www.wsj.com,"Wall Street Journal",4.0,Finance
+www.forbes.com,"Forbes",4.0,Finance
+www.reuters.com,"Reuters",4.5,Finance
+www.bloomberg.com,"Bloomberg",4.5,Finance
+finance.yahoo.com,"Yahoo Finance",5.0,Finance
+www.tradingview.com,"TradingVew",4.0,Finance
+www.barchart.com,"BarChart",4.0,Finance
+www.investing.com,"Investing.com",4.5,Finance
+www.thestreet.com,"TheStreet",4.0,Finance
+www.nasdaq.com,"Nasdaq",5.0,Finance
+www.kiplinger.com,"Kiplinger",4.5,Finance
+www.investopedia.com,"Investopedia",5.0,Finance
+www.benzinga.com,"Benzinga",4.0,Finance
+www.businessinsider.com,"Business Insider",4.0,Finance
+seekingalpha.com,"Seeking Alpha",4.5,Finance
+www.barrons.com,"Barron's",4.5,Finance
+www.financialexpress.com,"Financial Express",3.5,Finance
+www.businesstoday.in,"Business Today",3.5,Finance
