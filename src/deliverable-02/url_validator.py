@@ -47,6 +47,9 @@ class URLValidator:
         self.url = ''
         self.query = ''
         self.flags = {'citation': False, 'domain': None}
+        self.stars = 0
+        self.star_icon = ''
+        self.explanation = ''
         return
     
     def _fetch_page_soup(self) -> bs4.BeautifulSoup:
@@ -141,8 +144,8 @@ class URLValidator:
             self.scores['domain_trust'] = innate_star_rating
             return
         
-        outgoing_domain_ratings = [self._lookup_domain_rating(link)
-                                   for link in self.outgoing_links]
+        outgoing_domain_ratings = sorted([self._lookup_domain_rating(link) for link in self.outgoing_links],
+                                         reverse = True)
         
         outgoing_contributions = np.array([self._get_link_contribution(rating, idx + 1) for
                                            idx, rating in enumerate(outgoing_domain_ratings[:12])])
@@ -161,7 +164,7 @@ class URLValidator:
     
     def _get_title_relevance(self) -> float:
         query_kw = [token for token in self.query.lower().split(' ') if len(token) > 3]
-        cleaned_url = re.sub('[.!?,\'@#$%^&*()\-\\]', ' ', self.url).lower().split(' ')
+        cleaned_url = re.sub(r'[\.!?,\'@#$%^&*()\-\/]', ' ', self.url).lower().split(' ')
         
         counts = np.sum(np.array([1 if cleaned_url.count(kw) > 0 else 0 for kw in query_kw]))
         
@@ -198,17 +201,90 @@ class URLValidator:
         try:
             response = requests.get("https://serpapi.com/search", params = params)
             data = response.json()
-            self.scores['citation_score'] = min(len(data.get("organic_results", [])) * 10, 100)  # Normalize
+            self.scores['citation_score'] = np.clip(len(data.get("organic_results", [])) * 0.5, 1.0, 5.0)  # Normalize
             return
         except:
-            self.scores['citation_score'] = 0  # Default to no citations
+            self.scores['citation_score'] = 1  # Default to no citations
             return
+    
+    def _determine_category_weights(self) -> dict:
+        categories = list(self.scores.keys())
         
-    def _generate_explanation(self):
-        pass
+        if len(categories) == 4:
+            return {'domain_trust': 0.44, 'content_relevance': 0.33, 'title_relevance': 0.01, 'citation_score': 0.24}
+        
+        if len(categories) == 2:
+            return {'domain_trust': 0.9, 'title_relevance': 0.1}
+        
+        if len(categories) == 3:
+            if 'content_relevance' in categories:
+                return {'domain_trust': 0.55, 'content_relevance': 0.44, 'title_relevance': 0.01}
+            else:
+                return {'domain_trust': 0.7, 'title_relevance': 0.01, 'citation_score': 0.29}
     
     def _calculate_star_rating(self):
-        pass
+        weights = self._determine_category_weights()
+        self.scores['final_score'] = np.round(np.sum(np.array([score * weights[key]
+                                                               for key, score in self.scores.items()])), 2)
+        self.stars = self.scores['final_score']
+        
+        full_star = "⭐"
+        half_star = "🌟"
+        empty_star = "☆"
+        
+        num_full = int(self.stars)
+        if (self.stars - num_full) * 4 >= 3:
+            num_full += 1
+            num_half = 0
+        elif (self.stars - num_full) * 4 >= 1:
+            num_half = 1
+        else:
+            num_half = 0
+        num_empty = 5 - num_full - num_half
+        
+        self.star_icon = (full_star * num_full) + (half_star * num_half) + (empty_star * num_empty)
+        return
+    
+    def _generate_explanation(self):
+        reasons = []
+        
+        reason_options = {
+            'domain_trust':
+              [
+                  'The webpage domain is highly trusted, or the webpage links to many credible domains.',
+                  'The webpage domain is moderately trusted, or the webpage contains some links to credible domains.',
+                  'Neither the webpage domain nor the linked domains are highly trusted.'
+              ],
+            'content_relevance':
+            [
+                'The webpage content is highly relevant to the query.',
+                'The webpage content is loosely related to the query.',
+                'The webpage content cannot be found or is not related to the query.'
+            ],
+            'title_relevance':
+            [
+                'The webpage url is highly relevant to the query.',
+                'The webpage url is loosely related to the query.',
+                'The webpage url is not related to the query.'
+            ],
+            'citation_score':
+            [
+                'The webpage is often cited by academic sources.',
+                'The webpage is rarely cited by academic sources.',
+                'The webpage is not cited by academic sources.'
+            ]
+        }
+                          
+        for category, score in self.scores.items():
+            if score >= 4:
+                reasons.append(reason_options[category][0])
+            elif score >= 2.5:
+                reasons.append(reason_options[category][1])
+            else:
+                reasons.append(reason_options[category][2])
+                
+        self.explanation = ' '.join(reasons)
+        return
     
     def rate_url_validity(self, user_query: str, url: str,
                           flags: dict = {'citation': False, 'domain': None}) -> dict:
@@ -229,7 +305,8 @@ class URLValidator:
         self.query = user_query
         self.url = url
         self.min_length = len(self.url.split(' ')) * 3
-        self.flags = flags
+        self.flags['citation'] = False if 'citation' not in flags else flags['citation']
+        self.flags['domain'] = None if 'domain' not in flags else flags['domain']
 
         self._fetch_page_soup()   
 
@@ -250,10 +327,14 @@ class URLValidator:
             else:
                 self._check_google_scholar()
         
-        self.scores['final_score'] = np.round(np.sum(np.array([score for
-                                                               key, score in self.scores.items()]))\
-                                              / len(self.scores), 2)
-        stars, icon = 0, ''
-        explanation = ''
+        self._generate_explanation()
+        self._calculate_star_rating()
 
-        return {'raw_scores': self.scores, 'stars':{}, 'explanation': ''}
+        return {
+            'raw_scores': self.scores,
+            'stars': {
+                'score': self.stars,
+                'icon': self.star_icon
+            },
+            'explanation': self.explanation
+        }
