@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-def generate_start_total_lookup():
+def generate_star_total_lookup():
     star_ratings = np.arange(1,5,0.01)
     total_contribution_scores = 500 * np.arctanh((star_ratings - 1) / 4)
     df = pd.DataFrame()
@@ -15,8 +15,8 @@ def generate_start_total_lookup():
     
 
 def generate_link_contributions_lookup():
-    star_ratings = np.arange(2.5,5,0.01)
-    base_contributions = 500 * np.arctanh((star_ratings - 1) / 4)
+    star_ratings = np.arange(2.51,5.01,0.01)
+    base_contributions = 500 * np.arctanh((star_ratings - 2.5) / 4)
     exponents = np.array([1 - ((2*(x - 1)) / 21) for x in range(1, 13)])
     full_contributions = (np.tile(base_contributions, (12, 1)) ** exponents[:, None])
     
@@ -30,7 +30,7 @@ def generate_link_contributions_lookup():
     return
 
 def main():
-    generate_start_total_lookup()
+    generate_star_total_lookup()
     generate_link_contributions_lookup()
     
     return
