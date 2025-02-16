@@ -13,46 +13,46 @@ class URLValidator:
     """
     """
     
-    def __init__(self, serpapi_key: str = ''):
+    def __init__(self, serpapi_key: str = '') -> None:
         # Load SerpAPI key from instantiation
-        self.serpapi_key = serpapi_key
+        self._serpapi_key = serpapi_key
         
-        if len(self.serpapi_key) == 0:
-            self.serpapi_key = None
+        if len(self._serpapi_key) == 0:
+            self._serpapi_key = None
             print("No SerpAPI key provided, citation score analysis will not be available.")
             
-        self.similarity_model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
+        self._similarity_model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
         try:
-            self.trusted_domains = pd.read_csv('trusted_domains.csv')
+            self._trusted_domains = pd.read_csv('trusted_domains.csv')
         except:
             print("No trusted domains file provided, domain trust analysis will not be available.")    
         try:
-            self.star_contributions = pd.read_csv('contribution_totals.csv').iloc[:, 1].to_numpy()
-            self.link_contributions = pd.read_csv('link_scores.csv').iloc[:, 1:].to_numpy()
+            self._star_contributions = pd.read_csv('contribution_totals.csv').iloc[:, 1].to_numpy()
+            self._link_contributions = pd.read_csv('link_scores.csv').iloc[:, 1:].to_numpy()
         except:
             print("Lookup tables for domain trust not found, defaulting to manual calculations.")
-            self.star_contributions = None
-            self.link_contributions = None
+            self._star_contributions = None
+            self._link_contributions = None
             
         self._reset_params()
         
         return
     
-    def _reset_params(self):
-        self.scores = {}
-        self.soup = None
-        self.page_text = None
-        self.outgoing_links = None
-        self.min_length = 0
-        self.url = ''
-        self.query = ''
-        self.flags = {'citation': False, 'domain': None}
-        self.stars = 0
-        self.star_icon = ''
-        self.explanation = ''
+    def _reset_params(self) -> None:
+        self._scores = {}
+        self._soup = None
+        self._page_text = None
+        self._outgoing_links = None
+        self._min_length = 0
+        self._url = ''
+        self._query = ''
+        self._flags = {'citation': False, 'domain': None}
+        self._stars = 0
+        self._star_icon = ''
+        self._explanation = ''
         return
     
-    def _fetch_page_soup(self) -> bs4.BeautifulSoup:
+    def _fetch_page_soup(self) -> None:
         """
         Scrapes the content of a given URL and returns a BeautifulSoup object for further processing.
 
@@ -70,58 +70,76 @@ class URLValidator:
         }
         try:        
             # Send a GET request to the URL with headers
-            response = requests.get(self.url, headers = headers, timeout = 10)
+            response = requests.get(self._url, headers = headers, timeout = 10)
             response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
 
             # Parse the HTML content using BeautifulSoup
-            self.soup = BeautifulSoup(response.text, 'html.parser')
+            self._soup = BeautifulSoup(response.text, 'html.parser')
             return
 
         except requests.exceptions.RequestException as e:
-            self.soup = e
+            self._soup = e
             return
         
-    def _extract_page_text(self) -> List[str]:
+    def _extract_page_text(self) -> None:
         """
 
         """
         # Extract text content from the webpage
         html_tags = ['p', 'span', '#text']
-        text_content = []
+        text_content = set()
 
         for tag in html_tags:
-            content = [r.text.split(' ') for r in self.soup.select(tag, class_ = None)]
-            content = [' '.join([string.encode("ascii", errors = "ignore").decode().strip()
-                                 for string in r if len(string) > 0][:512])
-                                for r in content]
-            content = [r for r in content if len(r.split(' ')) > self.min_length]
-            text_content += content
+            for t in self._soup.select(tag, class_ = None):
+                text_block = []
+                for string in t.text.split(' '):
+                    
+                    string_cleaned = re.sub(r' ?<.+> ?', '', string.encode("ascii", errors = "ignore").decode().strip())
+                    string_cleaned = re.sub(r'[\.!?,\'@#$%^&*()\-\/\:]', '', string_cleaned).lower()
+#                     print(string_cleaned[:20])
+                    if len(string_cleaned) > 0:
+                        text_block.append(string_cleaned[:512])
+#                 text_block = [re.sub(r' ?<.+> ?', '', string.encode("ascii", errors = "ignore").decode().strip())
+#                               for string in t if len(string) > 0][:512]
+                if len(text_block) >= self._min_length:
+#                         print(text_block[0:5])
+                        text_content.add(' '.join(text_block))
+#             content = [r for r in content if len(r.split(' ')) > self._min_length]
+#             text_content += content
             
-        self.page_text = list(set(text_content))
+        self._page_text = list(text_content)
 
         return
     
-    def _extract_outgoing_links(self) -> List[str]:
+    def _extract_outgoing_links(self) -> None:
         """
 
         """
-        base_url = urlparse(self.url).netloc
-        raw_hrefs = [s.attrs['href'] for s in self.soup.find_all('a') if 'href' in s.attrs]
-        outgoing_links = [urlparse(href).netloc for href in raw_hrefs]
-        outgoing_links = list(set([link for link in outgoing_links if len(link) != 0
-                                   and extract(link).domain != extract(self.url).domain]))
+        base_url = urlparse(self._url).netloc
+        outgoing_links = set()
         
-        self.outgoing_links = outgoing_links
+        for a_tag in self._soup.find_all('a'):
+            if 'href' in a_tag.attrs:
+                link = urlparse(a_tag['href']).netloc
+                if len(link) != 0 and extract(link).domain != extract(self._url).domain:
+                    outgoing_links.add(link)
+        
+#         raw_hrefs = [s.attrs['href'] for s in self._soup.find_all('a') if 'href' in s.attrs]
+#         outgoing_links = [urlparse(href).netloc for href in raw_hrefs]
+#         outgoing_links = list(set([link for link in outgoing_links if len(link) != 0
+#                                    and extract(link).domain != extract(self._url).domain]))
+        
+        self._outgoing_links = list(outgoing_links)
 
         return
     
     def _lookup_domain_rating(self, domain: str) -> float:
-        if not self.flags['domain']:
-            valid_domains = self.trusted_domains.knowledge_domain.unique()
+        if not self._flags['domain']:
+            valid_domains = self._trusted_domains.knowledge_domain.unique()
         else:
-            valid_domains = [self.flags['domain'].strip().title()]
-        res = self.trusted_domains.loc[(self.trusted_domains.url == domain)
-                                       & (self.trusted_domains.knowledge_domain.isin(valid_domains))]
+            valid_domains = [self._flags['domain'].strip().title()]
+        res = self._trusted_domains.loc[(self._trusted_domains.url == domain)
+                                       & (self._trusted_domains.knowledge_domain.isin(valid_domains))]
         if len(res.index) != 0:
             return res.iloc[0].star_rating
         return 0
@@ -131,55 +149,55 @@ class URLValidator:
             return 0
         star_idx = int((star_rating - 2.51) * 100)
         
-        if self.link_contributions is not None:
+        if self._link_contributions is not None:
             base_contribution = 500 * np.arctanh((star_rating - 2.5) / 4)
             return np.round(base_contribution ** (1 - ((2*(link_num - 1)) / 21)), 3)
         
-        return np.round(self.link_contributions[star_idx, link_num - 1], 3)
+        return np.round(self._link_contributions[star_idx, link_num - 1], 3)
     
-    def _get_domain_trust(self) -> float:
-        innate_star_rating = self._lookup_domain_rating(urlparse(self.url).netloc)
+    def _get_domain_trust(self) -> None:
+        innate_star_rating = self._lookup_domain_rating(urlparse(self._url).netloc)
         
-        if innate_star_rating == 5 or not self.outgoing_links or len(self.outgoing_links) == 0:
-            self.scores['domain_trust'] = innate_star_rating
+        if innate_star_rating == 5 or not self._outgoing_links or len(self._outgoing_links) == 0:
+            self._scores['domain_trust'] = innate_star_rating
             return
         
-        outgoing_domain_ratings = sorted([self._lookup_domain_rating(link) for link in self.outgoing_links],
+        outgoing_domain_ratings = sorted([self._lookup_domain_rating(link) for link in self._outgoing_links],
                                          reverse = True)
         
         outgoing_contributions = np.array([self._get_link_contribution(rating, idx + 1) for
                                            idx, rating in enumerate(outgoing_domain_ratings[:12])])
         total_contributions = self._get_link_contribution(innate_star_rating + 1.5, 1) + np.sum(outgoing_contributions)
         
-        if self.star_contributions is None:
-            self.scores['domain_trust'] = np.round(4 * np.tanh((total_contributions) / 500) + 1, 2)
+        if self._star_contributions is None:
+            self._scores['domain_trust'] = np.round(4 * np.tanh((total_contributions) / 500) + 1, 2)
             
             return
         
         
-        self.scores['domain_trust'] = (np.searchsorted(self.star_contributions,
+        self._scores['domain_trust'] = (np.searchsorted(self._star_contributions,
                                                        total_contributions,
                                                        side = 'right') / 100) + 0.99
         return
     
-    def _get_title_relevance(self) -> float:
-        query_kw = [token for token in self.query.lower().split(' ') if len(token) > 3]
-        cleaned_url = re.sub(r'[\.!?,\'@#$%^&*()\-\/]', ' ', self.url).lower().split(' ')
+    def _get_title_relevance(self) -> None:
+        query_kw = set([token for token in self._query.lower().split(' ')])
+        cleaned_url = set(re.sub(r'[\.!?,\'@#$%^&*()\-\/]', ' ', self._url).lower().split(' '))
         
-        counts = np.sum(np.array([1 if cleaned_url.count(kw) > 0 else 0 for kw in query_kw]))
+        counts = np.sum(np.array([int(kw in cleaned_url) for kw in query_kw]))
         
-        self.scores['title_relevance'] = np.round(np.clip((counts / len(query_kw)) * 5, 1.0, 5.0), 2)
+        self._scores['title_relevance'] = np.round(np.clip((counts / len(query_kw)) * 5, 1.0, 5.0), 2)
         
         return
         
-    def _calculate_content_relevance(self) -> float:
-        if len(self.page_text) == 0:
-            self.scores['content_relevance'] = 0
+    def _calculate_content_relevance(self) -> None:
+        if len(self._page_text) == 0:
+            self._scores['content_relevance'] = 0
             return
         else:
-            similarities = np.array([util.pytorch_cos_sim(self.similarity_model.encode(self.query),
-                                                          self.similarity_model.encode(p)).item()
-                                   for p in self.page_text])
+            similarities = np.array([util.pytorch_cos_sim(self._similarity_model.encode(self._query),
+                                                          self._similarity_model.encode(p)).item()
+                                   for p in self._page_text])
             similarity_score = np.max(similarities) * 100
             
         if similarity_score < 30:
@@ -191,24 +209,24 @@ class URLValidator:
         else:
             similarity_score = 5.00
             
-        self.scores['content_relevance'] = similarity_score
+        self._scores['content_relevance'] = similarity_score
         
         return
     
-    def _check_google_scholar(self) -> float:
+    def _check_google_scholar(self) -> None:
         """ Checks Google Scholar citations using SerpAPI. """
-        params = {"q": self.url, "engine": "google_scholar", "api_key": self.serpapi_key}
+        params = {"q": self._url, "engine": "google_scholar", "api_key": self._serpapi_key}
         try:
             response = requests.get("https://serpapi.com/search", params = params)
             data = response.json()
-            self.scores['citation_score'] = np.clip(len(data.get("organic_results", [])) * 0.5, 1.0, 5.0)  # Normalize
+            self._scores['citation_score'] = np.clip(len(data.get("organic_results", [])) * 0.5, 1.0, 5.0)  # Normalize
             return
         except:
-            self.scores['citation_score'] = 1  # Default to no citations
+            self._scores['citation_score'] = 1  # Default to no citations
             return
     
     def _determine_category_weights(self) -> dict:
-        categories = list(self.scores.keys())
+        categories = list(self._scores.keys())
         
         if len(categories) == 4:
             return {'domain_trust': 0.44, 'content_relevance': 0.33, 'title_relevance': 0.01, 'citation_score': 0.24}
@@ -222,30 +240,30 @@ class URLValidator:
             else:
                 return {'domain_trust': 0.7, 'title_relevance': 0.01, 'citation_score': 0.29}
     
-    def _calculate_star_rating(self):
+    def _calculate_star_rating(self) -> None:
         weights = self._determine_category_weights()
-        self.scores['final_score'] = np.round(np.sum(np.array([score * weights[key]
-                                                               for key, score in self.scores.items()])), 2)
-        self.stars = self.scores['final_score']
+        self._scores['final_score'] = np.round(np.sum(np.array([score * weights[key]
+                                                               for key, score in self._scores.items()])), 2)
+        self._stars = self._scores['final_score']
         
         full_star = "⭐"
         half_star = "🌟"
         empty_star = "☆"
         
-        num_full = int(self.stars)
-        if (self.stars - num_full) * 4 >= 3:
+        num_full = int(self._stars)
+        if (self._stars - num_full) * 4 >= 3:
             num_full += 1
             num_half = 0
-        elif (self.stars - num_full) * 4 >= 1:
+        elif (self._stars - num_full) * 4 >= 1:
             num_half = 1
         else:
             num_half = 0
         num_empty = 5 - num_full - num_half
         
-        self.star_icon = (full_star * num_full) + (half_star * num_half) + (empty_star * num_empty)
+        self._star_icon = (full_star * num_full) + (half_star * num_half) + (empty_star * num_empty)
         return
     
-    def _generate_explanation(self):
+    def _generate_explanation(self) -> None:
         reasons = []
         
         reason_options = {
@@ -275,7 +293,7 @@ class URLValidator:
             ]
         }
                           
-        for category, score in self.scores.items():
+        for category, score in self._scores.items():
             if score >= 4:
                 reasons.append(reason_options[category][0])
             elif score >= 2.5:
@@ -283,7 +301,7 @@ class URLValidator:
             else:
                 reasons.append(reason_options[category][2])
                 
-        self.explanation = ' '.join(reasons)
+        self._explanation = ' '.join(reasons)
         return
     
     def rate_url_validity(self, user_query: str, url: str,
@@ -302,16 +320,16 @@ class URLValidator:
         """
         self._reset_params()
         
-        self.query = user_query
-        self.url = url
-        self.min_length = len(self.url.split(' ')) * 3
-        self.flags['citation'] = False if 'citation' not in flags else flags['citation']
-        self.flags['domain'] = None if 'domain' not in flags else flags['domain']
+        self._query = re.sub(r'[\.!?,\'@#$%^&*()\-\/]', '', user_query).lower()
+        self._url = url
+        self._min_length = len(self._url.split(' ')) * 3
+        self._flags['citation'] = False if 'citation' not in flags else flags['citation']
+        self._flags['domain'] = None if 'domain' not in flags else flags['domain']
 
         self._fetch_page_soup()   
 
-        if type(self.soup) != bs4.BeautifulSoup:
-            print(f"Failed to fetch content from {self.url}: {str(self.soup)}")
+        if type(self._soup) != bs4.BeautifulSoup:
+            print(f"Failed to fetch content from {self._url}: {str(self._soup)}")
             print(f"Content relevance score and outgoing link credibility cannot be calculated.")
         else:
             self._extract_page_text()
@@ -322,7 +340,7 @@ class URLValidator:
         self._get_title_relevance()
 
         if flags['citation']:
-            if not self.serpapi_key:
+            if not self._serpapi_key:
                 print("No SerpAPI key provided, citation score will not be evaluated.")
             else:
                 self._check_google_scholar()
@@ -331,10 +349,10 @@ class URLValidator:
         self._calculate_star_rating()
 
         return {
-            'raw_scores': self.scores,
+            'raw_scores': self._scores,
             'stars': {
-                'score': self.stars,
-                'icon': self.star_icon
+                'score': self._stars,
+                'icon': self._star_icon
             },
-            'explanation': self.explanation
+            'explanation': self._explanation
         }
