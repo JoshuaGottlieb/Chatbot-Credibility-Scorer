@@ -244,16 +244,17 @@ class URLValidator:
             # Take the maximum similarity found and scale from 0-1 to 0-100
             similarity_score = np.max(similarities) * 100
             
+        print(similarity_score)
         # Because the semantic similarity is not linear, apply some normalization based on unit testing
         # If the similarity score is low, return 1.00
-        if similarity_score < 30:
+        if similarity_score < 20:
             similarity_score = 1.00
         # If the similarity score is moderate, linearly scale from 1.00 to 3.00
-        elif similarity_score >= 30 and similarity_score < 50:
-            similarity_score = np.round(np.clip((1 / 6) * (similarity_score - 30) + 1, a_min = 1.00, a_max = 3.00), 2)
+        elif similarity_score >= 20 and similarity_score <= 50:
+            similarity_score = np.round(np.clip((1 / 15) * (similarity_score - 20) + 1, a_min = 1.00, a_max = 3.00), 2)
         # If the similarity score is high, scale from 3.00 to 5.00
-        elif similarity_score >= 50 and similarity_score <= 70:
-            similarity_score = np.round(np.clip(0.1 * ((similarity_score - 50)) + 3.0, 3.0, 5.00), 2)
+        elif similarity_score > 50 and similarity_score <= 75:
+            similarity_score = np.round(np.clip(0.08 * ((similarity_score - 50)) + 3.0, 3.0, 5.00), 2)
         else:
             similarity_score = 5.00
             
