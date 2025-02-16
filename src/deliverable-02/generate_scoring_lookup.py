@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import os
 
 def generate_star_total_lookup() -> None:
     """ Generates a lookup table to convert from contribution score to star rating. """
@@ -14,7 +15,9 @@ def generate_star_total_lookup() -> None:
     df = pd.DataFrame()
     df['star_rating'] = star_ratings
     df['total_contribution'] = total_contribution_scores
-    path = 'contribution_totals.csv'
+    path = './tables/contribution_totals.csv'
+    if not os.path.exists(path):
+        os.makedirs(os.path.join(path.split('/')[:-1]))
     df.to_csv(path, index = False)
     print(f'Contribution to star rating table created at {path}.')
     
@@ -38,7 +41,9 @@ def generate_link_contributions_lookup() -> None:
     
     df = pd.DataFrame(contribution_dict)
     df.insert(0, 'star_rating', star_ratings)
-    path = 'link_scores.csv'
+    path = './tables/link_scores.csv'
+    if not os.path.exists(path):
+        os.makedirs(os.path.join(path.split('/')[:-1]))
     df.to_csv(path, index = False)
     print(f'Link strength to contribution score table created at {path}.')
     

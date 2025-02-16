@@ -30,12 +30,12 @@ class URLValidator:
         # Load models and lookup tables from API calls and local .csv files
         self._similarity_model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
         try:
-            self._trusted_domains = pd.read_csv('trusted_domains.csv')
+            self._trusted_domains = pd.read_csv('./tables/trusted_domains.csv')
         except:
             print('No trusted domains file provided, domain trust analysis will not be available.')    
         try:
-            self._star_contributions = pd.read_csv('contribution_totals.csv').iloc[:, 1].to_numpy()
-            self._link_contributions = pd.read_csv('link_scores.csv').iloc[:, 1:].to_numpy()
+            self._star_contributions = pd.read_csv('./tables/contribution_totals.csv').iloc[:, 1].to_numpy()
+            self._link_contributions = pd.read_csv('./tables/link_scores.csv').iloc[:, 1:].to_numpy()
         except:
             print('Lookup tables for domain trust not found, defaulting to manual calculations.')
             self._star_contributions = None
