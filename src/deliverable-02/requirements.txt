@@ -1,0 +1,9 @@
+beautifulsoup4==4.11.1
+google_search_results==2.4.2
+numpy==1.24.4
+numpy==1.17.4
+pandas==2.0.3
+Requests==2.32.3
+sentence_transformers==3.2.1
+serpapi==0.1.5
+tldextract==5.1.2
