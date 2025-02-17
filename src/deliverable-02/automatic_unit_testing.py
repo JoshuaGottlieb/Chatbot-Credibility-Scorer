@@ -103,7 +103,7 @@ def process_csv(path: str, api_key: str) -> None:
         query_ratings = pd.concat([query_ratings, link_df], ignore_index = True)
         
         # Fill null values with 0 and write to csv to preserve inermediate progress
-        temp_path = f'./testing/unit_tests-queries_01-{i:02d}.csv'
+        temp_path = f'./testing/unit_tests-queries_01-{i + 1:02d}.csv'
         query_ratings = query_ratings.fillna(0)
         query_ratings.to_csv(temp_path, index = False)
         print(f'Saved intermediate results to {temp_path}.')
