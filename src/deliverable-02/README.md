@@ -1,0 +1,53 @@
+# Deliverable 2 Summary
+
+Below are explanations regarding the changes made from deliverable 1 to deliverable 2. The main credibility scoring class can be found under [url_validatory.py](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/blob/main/src/deliverable-02/url_validator.py), with sample unit tests that are scored manually and programatically under [testing/sample.csv](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/blob/main/src/deliverable-02/testing/sample.csv). The citation scoring portion fo the URLValidator requires access to a SerpAPI key which can be hardcoded or maintained using a local file called _api_keys.py_. A utility script, [generate_scoring_lookup.py](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/blob/main/src/deliverable-02/generate_scoring_lookup.py) was used to create lookup tables in [tables/](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/tree/main/src/deliverable-02/tables) to speed up calculations. A list of trusted domains was created using ChatGPT (and partially verified manually) under [tables/trusted_domains.csv](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/blob/main/src/deliverable-02/tables/trusted_domains.csv) in order to simulate an expert-curated list of trusted domains.
+
+## URLValidator Class
+
+The URLValidator class has four main scoring criteria: Domain Trust, Content Relevance, Title Relevance, and Citation Scoring. The Bias Detection and Fact Check modules from deliverable 1 were removed, as they were nonfunctional and were nontrivial to bring up to production-level quality. All methods and internal variables in the URLValidator class use the convention of starting with an underscore (_), with the exception of the _rate_url_validity()_ function which is the sole API intended to be accessed by the user.
+
+### Scraping Webpage Content
+
+The first step in the URLValidator class is to scrape the webpage content. Unlike in deliverable 1, the webscraping process is split into three parts. In the first part, the webpage is scraped using requests and converted to a soup object using BeautifulSoup. This allows the class to check if the webscraping was successful. If the webscraping failed, instead of terminating evaluation, the remaining modules that can be evaluated without using scraped data are still executed.
+
+The remaining two parts of the webpage scraping process are to extract textual content from the webpage and to extract all outgoing links from the webpage. The textual content that is extracted are any text blocks within _span_ or _p_ tags that are not assigned an html class, as well as any text with the _#text_ CSS selector. The text is processed by removing all non-alphanumeric characters and converting to lowercase, with duplicate or empty text boxes removed. In an attempt to remove meaningless junk text that is collected, only text boxes containing a number of tokens greater than or equal to 3 times the length of the query are preserved.
+
+The outgoing links are extracted from the webpage by searching for all _a_ tags containing _href_ attributes. These links are then simplified to their base form of subdomain-domain-suffix (ex: www.google.com instead of www.google.com/extra-text). Only unique base urls are preserved, and all urls on the webpage which share the same domain (ex: finance.yahoo.com and sports.yahoo.com share the same domain of yahoo) are discarded, as a website should not gain credibility by linking to itself.
+
+### Domain Trust Rating
+
+The domain trust rating follows the process outlined in [docs/Credibility_Algorithm_v3.pdf](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/blob/main/docs/Credibility_Algorithm_v3.pdf), with the only exception being that the formulas used are exact rather than algorithmically generated. First, the domain credibility of the webpage is assessed and converted to a contribution score. Then, the domain of each outgoing link is assessed, converted into a contribution score using a decaying exponent for successive links, and added to the webpages innate credibility. Finally, the contribution score is converted back to a star rating using a hyperbolic tangent function. The reason this function is not linear is that star ratings are not typically assigned linear importance from a psychological standpoint. A domain with a trust of 4.5 stars is much more trustworthy than one that is 4.0 stars, but the difference from 3.0 to 3.5 stars is much smaller than the difference from 4.0 to 4.5. As credibility approaches the maximum, it becomes successively harder to attain more credibility, implying asymptotic behavior that is handled by the hyperbolic tangent transformation.
+
+A useful consequence of this process is that the domain trust can be partially evaluated even if the webpage was unable to be scraped. The innate domain rating can be assessed via the lookup table provided by the [trusted_domains.csv](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/blob/main/src/deliverable-02/tables/trusted_domains.csv) file.
+
+### Content Relevance Scoring
+
+The content relevance module utilizes the 'all-mpnet-base-v2' SentenceTransformer from HuggingFace to compare semantic similarity between the page text and the user prompt, as in deliverable 1. However, the process is modified to greatly improve accuracy. Rather than comparing the user query to the entire text content of the webpage, the user query is compared to each individual text block extracted, as outlined in the scraping webpage content section above. The user query is also preprocessed to remove special characters and converted to lowercase characters which improves the accuracy of the scoring. Then, the maximum similarity score between the user query and the text blocks is chosen. This score ranges, in theory, from 0 to 100; however, in practice, most scores do not exceed ~75. Thus, the semantic scorer already introduces non-linearity.
+
+These scores are converted to a star rating from 1.00 to 5.00, where scores less than or equal to 20 automatically assigned a star rating of 1.00, scores from 20 to 50 scale linearly with a coefficient of 1/15 from 20 to 50 (resulting in star ratings from 1.00 to 3.00), and scores from 50 to 75 scale linearly with a coefficient of 0.08 from 50 to 75 (resulting in star ratings from 3.00 to 5.00). Scores above 75 are automatically given 5.00 star ratings. These linear coefficients arise from solving the linear equations using the chosen bounds, and these bounds are manually chosen based off of empirical results from unit testing.
+
+### Title Relevance
+
+The title relevance module compares the webpage URL to the user query. The webpage URL is parsed to remove all special characters and convert it to a set of unique tokens. The unique words in the user query are extracted and compared against the tokens in the URL. The star rating is then calculated as the proportion of unique words in the user query that appear in the webpage URL, normalized to produce a star rating between 1.00 and 5.00.
+
+The title relevance module is fairly simple and is not the most reliable; however, it provides an additional metric that can be scored without access to the webpage content.
+
+### Citation Scoring
+
+The citation scoring module is similar to the one in deliverable 1, utilizing the same code as provided to us in the template. The module works by executing a search on Google Scholar using SerpAPI, counting the number of results which contain the webpage URL. In limited testing, the citation scoring has always been zero. It is not certain if this is because the citation scorer is nonfunctional or if it is simply because almost zero of the webpages (compared to the number of webpages on the internet) that exist on the internet are referenced in academic material.
+
+The citation scoring is enabled by the user adding a flag when calling _rate_url_validity()_ and is automatically disabled if no SerpAPI key is provided when instantiating the URLValidator() class.
+
+### Weighting and Final Scoring
+
+The final star rating is a weighted average of the other scoring metrics. Since not all scores are available for all links, whether due to the citation flag being disabled or due to a failure to scrape the webpage, the weights are dynamically assigned based on the scores that are present. In general, domain trust is weighted slightly more than content relevance which are both weighted higher than citation score, and title relevance is given an extremely small weight. These weights may not be accurate and are prime subjects for further tuning to improve the performance of the URLValidator() class.
+
+## Unit Tests
+
+The materials used for unit testing are available under the [testing/](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/tree/main/src/deliverable-02/testing) directory. 20 prompts were generated across 5 different knowledge domains (Finance, Health, Medicine, Sports, and Travel) and can be found in [test_queries.csv](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/blob/main/src/deliverable-02/testing/test_queries.csv). Each of these 20 prompts was entered into a SerpAPI search to generate 40 relevant URLs to validate. The results of these 800 validations can be found in [unit tests.csv](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/blob/main/src/deliverable-02/testing/unit_tests.csv). One URL for each prompt was randomly selected to be manually scored, in order to provide a sample set comparing the scores generated by the URLValidator() class to a human "ground-truth" label, available at [sample.csv](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/blob/main/src/deliverable-02/testing/sample.csv).
+
+The prompts were generated using ChatGPT, and the script used to generate the unit tests can be found at [automatic_unit_testing.py](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/blob/main/src/deliverable-02/automatic_unit_testing.py).
+
+## Future Enhancements and Auxiliary Scripts
+
+The creation of a script to generate the domain trust functions, as outlined in [docs/Credibility_Algorithm_v3.pdf](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/blob/main/docs/Credibility_Algorithm_v3.pdf).
