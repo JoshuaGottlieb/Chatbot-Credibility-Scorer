@@ -1,25 +1,151 @@
 url,name,star_rating,knowledge_domain
-www.fool.com,"The Motley Fool",4.0,Finance
-www.economist.com,"The Economist",4.5,Finance
-www.marketwatch.com,"MarketWatch",5.0,Finance
-www.ft.com,"Financial Times",4.5,Finance
-www.cnn.com,"CNN",4.0,Finance
-www.cnbc.com,"CNBC",4.5,Finance
-www.wsj.com,"Wall Street Journal",4.0,Finance
-www.forbes.com,"Forbes",4.0,Finance
-www.reuters.com,"Reuters",4.5,Finance
-www.bloomberg.com,"Bloomberg",4.5,Finance
-finance.yahoo.com,"Yahoo Finance",5.0,Finance
-www.tradingview.com,"TradingVew",4.0,Finance
-www.barchart.com,"BarChart",4.0,Finance
-www.investing.com,"Investing.com",4.5,Finance
-www.thestreet.com,"TheStreet",4.0,Finance
-www.nasdaq.com,"Nasdaq",5.0,Finance
-www.kiplinger.com,"Kiplinger",4.5,Finance
-www.investopedia.com,"Investopedia",5.0,Finance
-www.benzinga.com,"Benzinga",4.0,Finance
-www.businessinsider.com,"Business Insider",4.0,Finance
-seekingalpha.com,"Seeking Alpha",4.5,Finance
-www.barrons.com,"Barron's",4.5,Finance
-www.financialexpress.com,"Financial Express",3.5,Finance
-www.businesstoday.in,"Business Today",3.5,Finance
+www.investopedia.com,"Investopedia",4.8,Finance
+www.bloomberg.com,"Bloomberg",4.7,Finance
+www.wsj.com,"The Wall Street Journal (WSJ)",4.9,Finance
+www.forbes.com,"Forbes Finance",4.5,Finance
+www.ft.com,"Financial Times (FT)",4.9,Finance
+www.nerdwallet.com,"NerdWallet",4.6,Finance
+www.cnbc.com,"CNBC Markets",4.5,Finance
+finance.yahoo.com,"Yahoo Finance",4.4,Finance
+www.morningstar.com,"Morningstar",4.7,Finance
+seekingalpha.com,"Seeking Alpha",4.3,Finance
+www.fool.com,"The Motley Fool",4.5,Finance
+www.marketwatch.com,"MarketWatch",4.6,Finance
+www.bankrate.com,"Bankrate",4.5,Finance
+www.kiplinger.com,"Kiplinger",4.4,Finance
+www.reuters.com,"Reuters Finance",4.7,Finance
+www.spglobal.com,"S&P Global",4.8,Finance
+www.federalreserve.gov,"Federal Reserve",5.0,Finance
+www.sec.gov,"SEC (U.S. Securities and Exchange Commission)",5.0,Finance
+www.msci.com,"MSCI",4.7,Finance
+www.economist.com,"The Economist - Finance Section",4.8,Finance
+www.worldbank.org,"World Bank Finance",5.0,Finance
+www.imf.org,"IMF Finance",5.0,Finance
+www.berkshirehathaway.com,"Warren Buffett’s Berkshire Hathaway",4.9,Finance
+www.blackrock.com,"BlackRock",4.7,Finance
+investor.vanguard.com,"Vanguard",4.7,Finance
+www.fidelity.com,"Fidelity Investments",4.6,Finance
+www.schwab.com,"Charles Schwab",4.6,Finance
+www.jpmorganchase.com,"J.P. Morgan Chase",4.8,Finance
+www.goldmansachs.com,"Goldman Sachs",4.8,Finance
+www.bofaml.com,"Bank of America Merrill Lynch",4.7,Finance
+www.mayoclinic.org,"Mayo Clinic",5.0,Health
+www.webmd.com,"WebMD",4.5,Health
+www.healthline.com,"Healthline",4.7,Health
+www.health.harvard.edu,"Harvard Health",4.9,Health
+my.clevelandclinic.org,"Cleveland Clinic",4.8,Health
+www.medicalnewstoday.com,"Medical News Today",4.6,Health
+www.verywellhealth.com,"Verywell Health",4.5,Health
+www.cdc.gov,"Centers for Disease Control and Prevention (CDC)",5.0,Health
+www.nih.gov,"National Institutes of Health (NIH)",5.0,Health
+www.who.int,"World Health Organization (WHO)",5.0,Health
+www.medlineplus.gov,"MedlinePlus",5.0,Health
+www.fda.gov,"U.S. Food and Drug Administration (FDA)",5.0,Health
+www.heart.org,"American Heart Association",4.9,Health
+www.cancer.org,"American Cancer Society",4.9,Health
+www.diabetes.org,"American Diabetes Association",4.8,Health
+www.lung.org,"American Lung Association",4.7,Health
+www.arthritis.org,"Arthritis Foundation",4.6,Health
+www.mentalhealth.gov,"U.S. Government Mental Health Resources",5.0,Health
+www.nami.org,"National Alliance on Mental Illness (NAMI)",4.7,Health
+www.psychiatry.org,"American Psychiatric Association",4.8,Health
+www.asco.org,"American Society of Clinical Oncology",4.9,Health
+www.stroke.org,"National Stroke Association",4.7,Health
+www.crohnscolitisfoundation.org,"Crohn’s & Colitis Foundation",4.6,Health
+www.kidney.org,"National Kidney Foundation",4.7,Health
+www.breastcancer.org,"BreastCancer.org",4.8,Health
+www.alz.org,"Alzheimer’s Association",4.8,Health
+www.parkinson.org,"Parkinson’s Foundation",4.7,Health
+www.aids.gov,"HIV.gov (formerly AIDS.gov)",5.0,Health
+www.womenshealth.gov,"U.S. Office on Women’s Health",5.0,Health
+www.menshealth.com,"Men’s Health",4.5,Health
+www.nejm.org,"The New England Journal of Medicine (NEJM)",5.0,Medicine
+www.thelancet.com,"The Lancet",5.0,Medicine
+www.jamanetwork.com,"JAMA (Journal of the American Medical Association)",5.0,Medicine
+www.bmj.com,"The BMJ (British Medical Journal)",5.0,Medicine
+www.ncbi.nlm.nih.gov,"PubMed (NCBI)",5.0,Medicine
+www.nature.com,"Nature Medicine",4.9,Medicine
+www.sciencedirect.com,"ScienceDirect - Medicine",4.8,Medicine
+www.medscape.com,"Medscape",4.7,Medicine
+www.ema.europa.eu,"European Medicines Agency (EMA)",5.0,Medicine
+www.rxlist.com,"RxList - The Internet Drug Index",4.6,Medicine
+www.drugs.com,"Drugs.com",4.7,Medicine
+www.merckmanuals.com,"Merck Manuals",4.8,Medicine
+www.uptodate.com,"UpToDate",4.9,Medicine
+www.cohrane.org,"Cochrane Library",5.0,Medicine
+www.who.int,"World Health Organization (WHO)",5.0,Medicine
+www.fda.gov,"U.S. Food and Drug Administration (FDA)",5.0,Medicine
+www.mayoclinic.org,"Mayo Clinic - Medical Research",5.0,Medicine
+www.hopkinsmedicine.org,"Johns Hopkins Medicine",5.0,Medicine
+www.nejm.org,"New England Journal of Medicine",5.0,Medicine
+www.cdc.gov,"Centers for Disease Control and Prevention (CDC)",5.0,Medicine
+www.ama-assn.org,"American Medical Association (AMA)",4.9,Medicine
+www.nhs.uk,"NHS (National Health Service)",5.0,Medicine
+www.acponline.org,"American College of Physicians",4.8,Medicine
+www.aafp.org,"American Academy of Family Physicians",4.7,Medicine
+www.idsociety.org,"Infectious Diseases Society of America",4.8,Medicine
+www.asco.org,"American Society of Clinical Oncology",4.9,Medicine
+www.acc.org,"American College of Cardiology",4.8,Medicine
+www.endocrine.org,"Endocrine Society",4.7,Medicine
+www.aan.com,"American Academy of Neurology",4.8,Medicine
+www.aap.org,"American Academy of Pediatrics",4.8,Medicine
+www.espn.com,"ESPN",4.8,Sports
+www.sports.yahoo.com,"Yahoo Sports",4.5,Sports
+www.bleacherreport.com,"Bleacher Report",4.4,Sports
+www.sbnation.com,"SB Nation",4.3,Sports
+www.si.com,"Sports Illustrated",4.6,Sports
+www.cbssports.com,"CBS Sports",4.7,Sports
+www.nfl.com,"NFL Official Site",4.9,Sports
+www.nba.com,"NBA Official Site",4.9,Sports
+www.mlb.com,"MLB Official Site",4.9,Sports
+www.nhl.com,"NHL Official Site",4.8,Sports
+www.fifa.com,"FIFA Official Site",5.0,Sports
+www.uefa.com,"UEFA Official Site",5.0,Sports
+www.foxsports.com,"FOX Sports",4.6,Sports
+www.nbcsports.com,"NBC Sports",4.6,Sports
+www.skysports.com,"Sky Sports",4.7,Sports
+www.eurosport.com,"Eurosport",4.5,Sports
+www.goal.com,"Goal",4.4,Sports
+www.athletic.com,"The Athletic",4.7,Sports
+www.motorsport.com,"Motorsport",4.5,Sports
+www.pgatour.com,"PGA Tour",4.8,Sports
+www.atptour.com,"ATP Tour",4.8,Sports
+www.wtatennis.com,"WTA Tennis",4.8,Sports
+www.ironman.com,"Ironman",4.6,Sports
+www.olympics.com,"Olympics Official Site",5.0,Sports
+www.cricbuzz.com,"Cricbuzz (Cricket)",4.5,Sports
+www.icc-cricket.com,"ICC Cricket",4.8,Sports
+www.rugbyworldcup.com,"Rugby World Cup",4.7,Sports
+www.espnfc.com,"ESPN FC (Soccer)",4.6,Sports
+www.mlssoccer.com,"MLS Soccer",4.6,Sports
+www.fanatics.com,"Fanatics",4.4,Sports
+www.tripadvisor.com,"TripAdvisor",4.8,Travel
+www.lonelyplanet.com,"Lonely Planet",4.7,Travel
+www.expedia.com,"Expedia",4.6,Travel
+www.booking.com,"Booking.com",4.8,Travel
+www.kayak.com,"Kayak",4.7,Travel
+www.skyscanner.com,"Skyscanner",4.7,Travel
+www.airbnb.com,"Airbnb",4.8,Travel
+www.hotels.com,"Hotels.com",4.6,Travel
+www.agoda.com,"Agoda",4.6,Travel
+www.travelocity.com,"Travelocity",4.5,Travel
+www.priceline.com,"Priceline",4.5,Travel
+www.rome2rio.com,"Rome2Rio",4.6,Travel
+www.hopper.com,"Hopper",4.5,Travel
+www.cheapoair.com,"CheapOair",4.4,Travel
+www.trivago.com,"Trivago",4.5,Travel
+www.airfarewatchdog.com,"Airfarewatchdog",4.4,Travel
+www.worldnomads.com,"World Nomads",4.6,Travel
+www.roughguides.com,"Rough Guides",4.4,Travel
+www.fodors.com,"Fodor’s Travel",4.5,Travel
+www.nationalgeographic.com/travel,"National Geographic Travel",4.9,Travel
+www.frommers.com,"Frommer’s",4.5,Travel
+www.wanderlust.co.uk,"Wanderlust",4.4,Travel
+www.budgettravel.com,"Budget Travel",4.4,Travel
+www.theworldpursuit.com,"The World Pursuit",4.3,Travel
+www.nomadicmatt.com,"Nomadic Matt",4.5,Travel
+www.intrepidtravel.com,"Intrepid Travel",4.6,Travel
+www.gadventures.com,"G Adventures",4.6,Travel
+www.roadtrippers.com,"Roadtrippers",4.5,Travel
+www.cruisecritic.com,"Cruise Critic",4.5,Travel
+www.seatguru.com,"SeatGuru",4.4,Travel
