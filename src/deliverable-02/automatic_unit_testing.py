@@ -86,10 +86,16 @@ def process_csv(path: str, api_key: str) -> None:
         # For each url, gather the rating and add to link_df
         for j, link in enumerate(results):
             print(f"Evaluating link {j + 1}/{len(results)} for query {i + 1}/{len(queries)}.")
-            citation = bool(domain in ['Health', 'Medicine'])
+            
+            
+            # Citation scores will not be calculated to prevent going over the free SerpAPI limits
+            # Uncomment the following line if using a SerpAPI key with a greater usage limit
+#             citation = bool(domain in ['Health', 'Medicine'])
+            citation = False
             ratings = validator.rate_url_validity(query, link,
                                                   flags = {'citation': citation,
                                                            'domain': domain})['raw_scores']
+            
             temp_df = pd.DataFrame.from_dict({k: [v] for k, v in ratings.items()})
             temp_df.insert(0, 'domain', domain)
             temp_df.insert(1, 'query', query)
