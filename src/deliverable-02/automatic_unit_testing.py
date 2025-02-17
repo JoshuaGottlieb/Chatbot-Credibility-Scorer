@@ -66,10 +66,13 @@ def process_csv(path: str, api_key: str) -> None:
                                             'title_relevance', 'citation_score',
                                             'final_score'])
 
+    query_num = 0
     # Loop through the queries to generate and evaluate links from SerpAPI
-    for domain, query in list(zip(knowledge_domains, queries)):
+    for i, domain_query in enumerate(list(zip(knowledge_domains, queries))):
+        domain, query = domain_query
+        print(query)
         # Search SerpAPI for links related to the query
-        print(f"Acquiring search results for query {query}.")
+        print(f"Acquiring search results for query {i + 1}/{len(queries)}.")
         results = search_serpapi(query, api_key, num_results = 40)
 
         # If an error occurs, print the error message and continue
@@ -81,8 +84,8 @@ def process_csv(path: str, api_key: str) -> None:
         link_df = pd.DataFrame()
 
         # For each url, gather the rating and add to link_df
-        for i, link in enumerate(results):
-            print(f"Evaluating link {i + 1}/{len(results)} for query {query}.")
+        for j, link in enumerate(results):
+            print(f"Evaluating link {j + 1}/{len(results)} for query {i + 1}/{len(queries)}.")
             citation = bool(domain in ['Health', 'Medicine'])
             ratings = validator.rate_url_validity(query, link,
                                                   flags = {'citation': citation,
@@ -98,6 +101,12 @@ def process_csv(path: str, api_key: str) -> None:
 
         # Add ratings for the query to top-level dataframe
         query_ratings = pd.concat([query_ratings, link_df], ignore_index = True)
+        
+        # Fill null values with 0 and write to csv to preserve inermediate progress
+        temp_path = f'./testing/unit_tests-queries_01-{i:02d}.csv'
+        query_ratings = query_ratings.fillna(0)
+        query_ratings.to_csv(temp_path, index = False)
+        print(f'Saved intermediate results to {temp_path}.')
 
     # Fill null values with 0 and write to csv
     query_ratings = query_ratings.fillna(0)
