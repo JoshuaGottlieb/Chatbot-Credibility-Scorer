@@ -9,4 +9,8 @@
 
 ## Deliverable 1 Content
 
-Content for Deliverable 1 is available under [src/deliverable-01](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/tree/main/src/deliverable-01). Included is the base function provided by ChatGPT, unit tests with explanations for poor performance in a Jupyter notebook, a requirements file for required libraries, and an informal analysis of the quality of the base credibility scorer function. An API Key to SerpAPI is needed to make the code work and is not provided.
+Content for deliverable 1 is available under [src/deliverable-01](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/tree/main/src/deliverable-01). Included is the base function provided by ChatGPT, unit tests with explanations for poor performance in a Jupyter notebook, a requirements file for required libraries, and an informal analysis of the quality of the base credibility scorer function. An API Key to SerpAPI is needed to make the code work and is not provided.
+
+## Deliverable 2 Content
+
+Content for deliverable 2 is available under [src/deliberable-02](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/tree/main/src/deliverable-02). Included is the URLValidator() class, unit tests and a manually graded sample, utility scripts to generate lookup tables and batch process user prompts, a requirements file for required libraries, and a description of the updates implemented. Potential future enhancements are also added. An API Key to SerpAPI is needed to make some portions of the code function and is not provided.
