@@ -138,11 +138,16 @@ class URLValidator:
         Returns:
             float: A star rating between 1.00 to 5.00 denoting the innate domain trustworthiness.
         """
+        
         # Check whether to restrict search to a specific knowledge domain
+        all_domains = self._trusted_domains.knowledge_domain.unique()
+        
         if not self._flags['domain']:
-            valid_domains = self._trusted_domains.knowledge_domain.unique()
+            valid_domains = all_domains
         else:
-            valid_domains = [self._flags['domain'].strip().title()]
+            # If a specific knowledge domain is provided, see if it exists in the lookup, else use all domains
+            flag_domain = self._flags['domain'].strip().title()
+            valid_domains = [flag_domain] if flag_domain in all_domains else all_domains
             
         # Search through pre-loaded Pandas dataframe
         res = self._trusted_domains.loc[(self._trusted_domains.url == domain)
@@ -244,7 +249,6 @@ class URLValidator:
             # Take the maximum similarity found and scale from 0-1 to 0-100
             similarity_score = np.max(similarities) * 100
             
-        print(similarity_score)
         # Because the semantic similarity is not linear, apply some normalization based on unit testing
         # If the similarity score is low, return 1.00
         if similarity_score < 20:
