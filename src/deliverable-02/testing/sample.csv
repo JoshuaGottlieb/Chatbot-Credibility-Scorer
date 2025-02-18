@@ -1,21 +1,21 @@
 user_prompt,url_to_check,func_rating,custom_rating
-What are the top emerging markets for long-term investment strategies?,https://www.vaneck.com/us/en/blogs/investment-outlook/jan-van-eck-where-to-invest-now-rising-emerging-markets-and-bitcoin/,3.88,0
-How can I diversify my portfolio to minimize financial risk?,https://moneysmart.gov.au/how-to-invest/diversification,2.76,0
-What impact do interest rate changes have on personal savings plans?,https://www.wintrust.com/financial-education/2022/09/fed-interest-rate-changes-how-does-this-impact-your-personal-finances.html,2.7,0
-How do economic indicators influence global stock market trends?,https://www.investopedia.com/articles/investing/031413/economic-indicatiors-affect-us-stock-market.asp,4.57,0
-What are the benefits of regular exercise on mental well-being?,https://www.irt.org.au/the-good-life/10-benefits-of-exercise-for-mental-health/,4.14,0
-How can mindfulness meditation reduce stress and improve overall health?,https://www.rishikulyogshalarishikesh.com/blog/mindfulness-meditation-a-research-proven-way-to-reduce-stress/,2.77,0
-What are the best exercises to improve heart health for beginners?,https://www.webmd.com/fitness-exercise/exercise-healthy-heart,4.37,0
-How does sleep quality affect physical and mental health outcomes?,https://www.psychologytoday.com/us/basics/sleep/sleep-and-mental-health,2.77,0
-What are the latest advancements in personalized cancer treatment therapies?,https://www.nature.com/articles/s41392-024-01856-7,4.92,0
-How do gene therapies work in curing rare genetic disorders?,https://www.mayoclinic.org/tests-procedures/gene-therapy/about/pac-20384619,4.89,0
-What are the side effects of the new migraine medication compared to older drugs?,https://www.migraineagain.com/comparing-the-newer-vs-older-acute-migraine-medications/,3.75,0
-How is telemedicine changing patient care in rural communities?,https://www.gao.gov/blog/why-health-care-harder-access-rural-america,2.48,0
-What training techniques are most effective for improving marathon performance?,https://www.marathonsports.com/blog/how-to-run-faster,2.35,0
-How has data analytics transformed professional basketball strategies?,https://crowleymediagroup.com/resources/data-analytics-in-sports-game-changing-insight/,2.76,0
-What are the benefits of cross-training for injury prevention in athletes?,https://www.eastsideidealhealth.com/the-benefits-of-cross-training-for-injury-prevention/,2.78,0
-How does altitude training affect endurance in competitive sports events?,https://sports.stackexchange.com/questions/4984/effects-of-altitude-on-athletic-performance,2.74,0
-What are the safest travel destinations for solo travelers in 2025?,https://www.exploreworldwide.com/blog/top-solo-trips-for-2025,2.76,0
-How can travelers find sustainable and eco-friendly vacation options?,https://www.peekpro.com/blog/sustainable-tourism-examples,2.76,0
-What cultural experiences should not be missed in Japan’s rural areas?,https://www.insidejapantours.com/blog/2015/08/14/5-underrated-destinations-in-rural-japan/,2.28,0
-How do budget travel options compare to luxury travel experiences worldwide?,https://traveltillyoudrop.com/budget-travel-vs-luxury-travel/,2.76,0
+What are the top emerging markets for long-term investment strategies?,https://www.vaneck.com/us/en/blogs/investment-outlook/jan-van-eck-where-to-invest-now-rising-emerging-markets-and-bitcoin/,3.88,3.5
+How can I diversify my portfolio to minimize financial risk?,https://moneysmart.gov.au/how-to-invest/diversification,2.76,3.0
+What impact do interest rate changes have on personal savings plans?,https://www.wintrust.com/financial-education/2022/09/fed-interest-rate-changes-how-does-this-impact-your-personal-finances.html,2.7,3.0
+How do economic indicators influence global stock market trends?,https://www.investopedia.com/articles/investing/031413/economic-indicatiors-affect-us-stock-market.asp,4.57,4.5
+What are the benefits of regular exercise on mental well-being?,https://www.irt.org.au/the-good-life/10-benefits-of-exercise-for-mental-health/,4.14,4.75
+How can mindfulness meditation reduce stress and improve overall health?,https://www.rishikulyogshalarishikesh.com/blog/mindfulness-meditation-a-research-proven-way-to-reduce-stress/,2.77,2.0
+What are the best exercises to improve heart health for beginners?,https://www.webmd.com/fitness-exercise/exercise-healthy-heart,4.37,4.5
+How does sleep quality affect physical and mental health outcomes?,https://www.psychologytoday.com/us/basics/sleep/sleep-and-mental-health,2.77,3.5
+What are the latest advancements in personalized cancer treatment therapies?,https://www.nature.com/articles/s41392-024-01856-7,4.92,5.0
+How do gene therapies work in curing rare genetic disorders?,https://www.mayoclinic.org/tests-procedures/gene-therapy/about/pac-20384619,4.89,4.25
+What are the side effects of the new migraine medication compared to older drugs?,https://www.migraineagain.com/comparing-the-newer-vs-older-acute-migraine-medications/,3.75,5.0
+How is telemedicine changing patient care in rural communities?,https://www.gao.gov/blog/why-health-care-harder-access-rural-america,2.48,1.75
+What training techniques are most effective for improving marathon performance?,https://www.marathonsports.com/blog/how-to-run-faster,2.35,2.0
+How has data analytics transformed professional basketball strategies?,https://crowleymediagroup.com/resources/data-analytics-in-sports-game-changing-insight/,2.76,3.75
+What are the benefits of cross-training for injury prevention in athletes?,https://www.eastsideidealhealth.com/the-benefits-of-cross-training-for-injury-prevention/,2.78,3.0
+How does altitude training affect endurance in competitive sports events?,https://sports.stackexchange.com/questions/4984/effects-of-altitude-on-athletic-performance,2.74,2.75
+What are the safest travel destinations for solo travelers in 2025?,https://www.exploreworldwide.com/blog/top-solo-trips-for-2025,2.76,2.0
+How can travelers find sustainable and eco-friendly vacation options?,https://www.peekpro.com/blog/sustainable-tourism-examples,2.76,3.25
+What cultural experiences should not be missed in Japan’s rural areas?,https://www.insidejapantours.com/blog/2015/08/14/5-underrated-destinations-in-rural-japan/,2.28,4.0
+How do budget travel options compare to luxury travel experiences worldwide?,https://traveltillyoudrop.com/budget-travel-vs-luxury-travel/,2.76,4.0
