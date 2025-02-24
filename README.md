@@ -17,4 +17,4 @@ Content for deliverable 2 is available under [src/deliverable-02](https://github
 
 ## Deliverable 3 Content
 
-Content for deliverable 3 is availableunder [src/deliverable-03](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/tree/main/src/deliverable-03). Included is a Jupyter Notebook containing the training of a Tensorflow neural network designed to predict human ratings based off of user prompts and machine-generated ratings from deliverable 2. The trained model and selected tokenizer are available in this repository, and they are also deployed on HuggingFace.
+Content for deliverable 3 is available under [src/deliverable-03](https://github.com/JoshuaGottlieb/Chatbot-Credibility-Scorer/tree/main/src/deliverable-03). Included is a Jupyter Notebook containing the training of a Tensorflow neural network designed to predict human ratings based off of user prompts and machine-generated ratings from deliverable 2. The trained model and selected tokenizer are available in this repository, and they are also deployed on HuggingFace.
