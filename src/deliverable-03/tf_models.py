@@ -59,7 +59,7 @@ def create_nn_model_v2(embedding_dim: int, num_of_dense: int,
                        l1_regularization: float = 0.0, l2_regularization: float = 0.0,
                        dense_step_rate: int = 1) -> Model:
     """
-    Creates a neural network model that processes embedded user prompts using dense layers,
+    Creates a neural network model that processes embedded user prompts using dense layers with regularization,
     concatenates it with function ratings, and passes through dense layers, using a LearningRateScheduler.
 
     Args:
@@ -84,14 +84,13 @@ def create_nn_model_v2(embedding_dim: int, num_of_dense: int,
     # low enough for quick training and to use on small training datasets
     max_neurons = 2 ** min(np.round(np.log2(embedding_dim) * 1.5), 12)
     
-    # For every 2 layers, halve the number of neurons
-    # This lets the model be very flexible for early layers and slowly become less flexible
-    # This keeps the training relatively stochastic, which is helpful with low amounts of training data
-    # If a layer has very few neurons, the model tends to plateau
+    # Add dense layers
     for i, _ in enumerate(range(num_of_dense)):
-        # First layer uses max neurons, then halve the number of neurons every 2 layers
+        # First layer uses max neurons, then halve the number of neurons every dense_step_rate layers
         divisor = 2 ** ((i + (dense_step_rate - 1)) // dense_step_rate)
         num_neurons = max(1, int(max_neurons / divisor)) # Ensure integer neurons, minimum of 1
+        
+        # Create dense layer with correct number of neurons and apply ElasticNet regularization
         x = Dense(num_neurons, kernel_regularizer = L1L2(l1_regularization, l2_regularization),
                   activation = 'relu')(x)
 
@@ -105,9 +104,10 @@ def create_nn_model_v2(embedding_dim: int, num_of_dense: int,
     concatenated = Concatenate()([x, y])
     output = Dense(6, activation = 'softmax', name = 'output')(concatenated)
 
-    # Define and compile the model
+    # Define the model
     model = Model(inputs = [text_input, func_rating_input], outputs = output)
-#     model.compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics = ['accuracy'])
+    
+    # Compile the model using Adam optimizer and ExponentialDecay learning rate scheduler
     model.compile(optimizer = Adam(
         learning_rate = ExponentialDecay(
             initial_learning_rate = 0.001,
